@@ -34,10 +34,59 @@ STEP-5: Display the obtained cipher text.
 
 
 
-Program:
+## Program:
+```
+ #include <stdio.h>
+#include <string.h>
+#define SIZE 5
+char key[SIZE][SIZE] = 
+{
+    {'M','O','N','A','R'}, {'C','H','Y','B','D'},
+    {'E','F','G','I','K'}, {'L','P','Q','S','T'},
+    {'U','V','W','X','Z'}
+};
+
+void find(char ch, int *r, int *c) 
+{
+    for (int i = 0; i < SIZE*SIZE; i++)
+        if (key[i/SIZE][i%SIZE] == ch) { *r = i/SIZE; *c = i%SIZE; return; }
+}
+
+void playfair(char *in, char *out, int enc) 
+{
+    int r1, c1, r2, c2, s = enc ? 1 : -1;
+    for (int i = 0; in[i]; i += 2) 
+    {
+        find(in[i], &r1, &c1); find(in[i+1], &r2, &c2);
+        if (r1 == r2)
+            out[i] = key[r1][(c1 + s + SIZE) % SIZE],
+            out[i+1] = key[r2][(c2 + s + SIZE) % SIZE];
+        else if (c1 == c2)
+            out[i] = key[(r1 + s + SIZE) % SIZE][c1],
+            out[i+1] = key[(r2 + s + SIZE) % SIZE][c2];
+        else
+            out[i] = key[r1][c2], out[i+1] = key[r2][c1];
+    }
+    out[strlen(in)] = '\0';
+}
+
+int main() 
+{
+    char encrypted[100], decrypted[100];
+    char text[] = "DHARSHINI";
+    playfair(text, encrypted, 1);
+    printf("Encrypted: %s\n", encrypted);
+    playfair(encrypted, decrypted, 0);
+    printf("Decrypted: %s\n", decrypted);
+}
+```
 
 
 
 
 
-Output:
+## Output:
+<img width="286" height="221" alt="Screenshot 2026-10-30 081328" src="https://github.com/user-attachments/assets/89459035-b0a5-4541-8127-98d7d9723f7b" />
+
+## result
+The program has been executed successfully
